@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:covid_19_tracker_app/utils/navigation/custom_navigation.dart';
 import 'package:covid_19_tracker_app/utils/text/text.dart';
+import 'package:covid_19_tracker_app/view/all_covid_screen/all_covid_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -14,8 +18,23 @@ class splase_screen extends StatefulWidget {
 class _splase_screenState extends State<splase_screen> with TickerProviderStateMixin {
 
   late AnimationController animation =
-  AnimationController(vsync: this , duration: Duration(seconds: 3))..repeat();
+  AnimationController(vsync: this , duration: Duration(seconds: 5))..repeat();
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Timer(Duration(seconds: 5), () {
+       Navigator.pushReplacement(context, cust_transactinon(child: all_covid_screen()));
+    });
+  }
 
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
 
   @override
@@ -28,14 +47,27 @@ class _splase_screenState extends State<splase_screen> with TickerProviderStateM
            mainAxisAlignment: MainAxisAlignment.center,
            children: [
 
+             SizedBox(height: 10.h,),
+
+             algeriya_text(containt: "Covid 19 Tracker" ,
+               fontsize: 30.spMin,
+             ),
+
+             SizedBox(height: 100.h,),
+
              AnimatedBuilder(
                  animation: animation,
-                 child: Container(
-                     height: 300.h,
-                     width: MediaQuery.sizeOf(context).width,
-                     child: Image.asset("assets/images/virus.png" ,
-                       fit:  BoxFit.fitHeight,
-                     )
+                 child: Padding(
+                   padding:EdgeInsets.symmetric(
+                     horizontal: 20.w,
+                   ),
+                   child: Container(
+                     height: 200.h,
+                     width: 200.w,
+                     child: Image.asset("assets/images/virus.png",
+                         fit: BoxFit.fill,
+                       ),
+                   ),
                  ),
                  builder: (context, child){
                    return Transform.rotate(
@@ -45,11 +77,14 @@ class _splase_screenState extends State<splase_screen> with TickerProviderStateM
                  },
              ),
 
+
              SizedBox(height: 100.h,),
+
+             cario_text(containt: "--------- Powered By ----------"),
+             SizedBox(height: 10.h,),
+             algeriya_text(containt: "Shah Co. Pvt LTM", fontsize: 30.spMin,)
              
-             algeriya_text(containt: "Covid 19 Tracker" ,
-             fontsize: 30.spMin,
-             ),
+
              
            ],
          ),
