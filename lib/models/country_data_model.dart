@@ -9,7 +9,6 @@ List<CountryModel> countryModelFromMap(String str) => List<CountryModel>.from(js
 
 String countryModelToMap(List<CountryModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toMap())));
 
-
 //contry model
 class CountryModel {
   final int updated;
@@ -35,6 +34,7 @@ class CountryModel {
   final double activePerOneMillion;
   final double recoveredPerOneMillion;
   final double criticalPerOneMillion;
+  final double effectedper;
 
   CountryModel({
     required this.updated,
@@ -60,33 +60,39 @@ class CountryModel {
     required this.activePerOneMillion,
     required this.recoveredPerOneMillion,
     required this.criticalPerOneMillion,
+    required this.effectedper,
   });
 
-  factory CountryModel.fromMap(Map<String, dynamic> json) => CountryModel(
-    updated: json["updated"],
-    country: json["country"],
-    countryInfo: CountryInfo.fromMap(json["countryInfo"]),
-    cases: json["cases"],
-    todayCases: json["todayCases"],
-    deaths: json["deaths"],
-    todayDeaths: json["todayDeaths"],
-    recovered: json["recovered"],
-    todayRecovered: json["todayRecovered"],
-    active: json["active"],
-    critical: json["critical"],
-    casesPerOneMillion: json["casesPerOneMillion"],
-    deathsPerOneMillion: json["deathsPerOneMillion"],
-    tests: json["tests"],
-    testsPerOneMillion: json["testsPerOneMillion"],
-    population: json["population"],
-    continent: json["continent"],
-    oneCasePerPeople: json["oneCasePerPeople"],
-    oneDeathPerPeople: json["oneDeathPerPeople"],
-    oneTestPerPeople: json["oneTestPerPeople"],
-    activePerOneMillion: json["activePerOneMillion"]?.toDouble(),
-    recoveredPerOneMillion: json["recoveredPerOneMillion"]?.toDouble(),
-    criticalPerOneMillion: json["criticalPerOneMillion"]?.toDouble(),
-  );
+  factory CountryModel.fromMap(Map<String, dynamic> json){
+    double effectedpercent;
+    effectedpercent = (json["active"] / json["cases"]) * 100;
+    return CountryModel(
+      updated: json["updated"],
+      country: json["country"],
+      countryInfo: CountryInfo.fromMap(json["countryInfo"]),
+      cases: json["cases"],
+      todayCases: json["todayCases"],
+      deaths: json["deaths"],
+      todayDeaths: json["todayDeaths"],
+      recovered: json["recovered"],
+      todayRecovered: json["todayRecovered"],
+      active: json["active"],
+      critical: json["critical"],
+      casesPerOneMillion: json["casesPerOneMillion"],
+      deathsPerOneMillion: json["deathsPerOneMillion"],
+      tests: json["tests"],
+      testsPerOneMillion: json["testsPerOneMillion"],
+      population: json["population"],
+      continent: json["continent"],
+      oneCasePerPeople: json["oneCasePerPeople"],
+      oneDeathPerPeople: json["oneDeathPerPeople"],
+      oneTestPerPeople: json["oneTestPerPeople"],
+      activePerOneMillion: json["activePerOneMillion"]?.toDouble(),
+      recoveredPerOneMillion: json["recoveredPerOneMillion"]?.toDouble(),
+      criticalPerOneMillion: json["criticalPerOneMillion"]?.toDouble(),
+      effectedper: effectedpercent,
+    );
+  }
 
   Map<String, dynamic> toMap() => {
     "updated": updated,

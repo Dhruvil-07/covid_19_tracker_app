@@ -34,70 +34,157 @@ class _all_covid_screenState extends State<all_covid_screen> with TickerProvider
   Widget build(BuildContext context) {
     AllCovidModel? allCovidModel;
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Theme.of(context).brightness == Brightness.light ?  Colors.deepPurple.shade100 : Colors.white,
+        centerTitle: true,
+        title: algeriya_text(containt: "Covid 19 Tracker"),
+        actions: [
+          IconButton(onPressed: (){
+            Navigator.push(context, cust_transactinon(child: search_country_screen()));
+          }, icon: Icon(Icons.search_rounded ,
+              size: 24.spMin,
+              color : Theme.of(context).brightness == Brightness.light ?  Colors.black : Colors.white
+          ),
+          ),
+        ],
+      ),
+
+
       body: SafeArea(
-        child: FutureBuilder(
-          future: all_covid_detail.get_world_covid_data(),
-          builder: (context, AsyncSnapshot<AllCovidModel> snapshot){
-            if(snapshot.hasData)
-              {
-                allCovidModel = snapshot.data;
-                print(allCovidModel);
-                 return SingleChildScrollView(
-                   child: Column(
-                     children: [
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              
+              FutureBuilder(
+                  future: all_covid_detail.get_world_covid_data(),
+                  builder: (context, AsyncSnapshot<AllCovidModel> snapshot){
+                    if(snapshot.hasData)
+                    {
+                      allCovidModel = snapshot.data;
+                      print(allCovidModel);
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: [
 
-                       SizedBox(height: 30.h,),
+                            SizedBox(height: 30.h,),
 
-                       //piechart
-                       pie_chart(
-                         total_cases: snapshot.data!.cases.toString(),
-                         total_recovered: snapshot.data!.recovered.toString(),
-                         total_death: snapshot.data!.deaths.toString(),
-                       ),
+                            //piechart
+                            pie_chart(
+                              total_cases: snapshot.data!.cases.toString(),
+                              total_recovered: snapshot.data!.recovered.toString(),
+                              total_death: snapshot.data!.deaths.toString(),
+                            ),
 
-                       SizedBox(height: 40.h,),
+                            SizedBox(height: 40.h,),
 
-                       //Covis data card
-                       covid_data_card(
-                         allCovidModel: allCovidModel!,
-                       ),
+                            //Covis data card
+                            covid_data_card(
+                              allCovidModel: allCovidModel!,
+                            ),
 
-                       SizedBox(height: 20.h,),
+                            SizedBox(height: 20.h,),
 
+                            algeriya_text(containt: "Top  5  Effected Country" , fontsize: 22.spMin,),
 
-                       //country button
-                       ElevatedButton(
-                           style: ElevatedButton.styleFrom(
-                             backgroundColor: Colors.deepPurple.shade200,
-                           ),
-                           onPressed: (){
-                             Navigator.push(context, cust_transactinon(child: search_country_screen()));
-                           },
-                           child: cario_text(containt: "Search Countries"),
-                       )
+                            SizedBox(height: 20.h,),
 
+                          ],
+                        ),
+                      );
+                    }
+                    else
+                    {
+                      return SpinKitCircle(
+                        color: Colors.yellow,
+                        size: 50.sp,
+                        controller: animation,
+                      );
+                    }
 
-                     ],
-                   ),
-                 );
-              }
-            else
-              {
-                return SpinKitCircle(
-                   color: Colors.yellow,
-                   size: 50.sp,
-                   controller: animation,
-                 );
-              }
+                  }
+              ),
 
-          }
+              SizedBox(height: 8.h,),
+
+              Container(
+                height: 250.h,
+                width: double.infinity,
+                child: FutureBuilder(
+                  future: country_detail.get_asc_sorted_list(),
+                  builder: (context, snapshot){
+                    if(snapshot.hasData)
+                    {
+                      return Obx(
+                            () => ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index){
+                            return Padding(
+                              padding: EdgeInsets.all(
+                                10.spMin,
+                              ),
+                              child: Container(
+                                width: MediaQuery.sizeOf(context).width  - 50.w,
+                                color: Colors.grey,
+                                child: Text("${snapshot.data!.value[index].country}"
+                                    " ${snapshot.data!.value[index].effectedper}"),
+                              ),
+                            );
+                          },),
+                      );
+                    }
+                    else
+                    {
+                      return Center(child: CircularProgressIndicator(),);
+                    }
+
+                  },
+
+                ),
+              ),
+
+              Container(
+                height: 250.h,
+                width: double.infinity,
+                child: FutureBuilder(
+                  future: country_detail.get_desc_sorted_list(),
+                  builder: (context, snapshot){
+                    if(snapshot.hasData)
+                    {
+                      return Obx(
+                            () => ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index){
+                            return Padding(
+                              padding: EdgeInsets.all(
+                                10.spMin,
+                              ),
+                              child: Container(
+                                width: MediaQuery.sizeOf(context).width  - 50.w,
+                                color: Colors.grey,
+                                child: Text("${snapshot.data!.value[index].country}"
+                                    " ${snapshot.data!.value[index].effectedper}"),
+                              ),
+                            );
+                          },),
+                      );
+                    }
+                    else
+                    {
+                      return Center(child: CircularProgressIndicator(),);
+                    }
+
+                  },
+
+                ),
+              )
+            ],
+
+          ),
         ),
       )
     );
   }
 }
-/*Center(
-        child: all_covid_detail.covid_data.value.cases == null ?
-               SpinKitCircle(controller: animation, size: 50.sp, color: Colors.yellow,) :
-               Text(all_covid_detail.covid_data.value.cases.toString()),
-      ),*/

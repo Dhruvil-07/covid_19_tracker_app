@@ -2,6 +2,7 @@ import 'package:covid_19_tracker_app/instance/getx_controller_instance.dart';
 import 'package:covid_19_tracker_app/models/country_data_model.dart';
 import 'package:covid_19_tracker_app/utils/navigation/custom_navigation.dart';
 import 'package:covid_19_tracker_app/utils/text/text.dart';
+import 'package:covid_19_tracker_app/view/all_covid_screen/all_covid_screen.dart';
 import 'package:covid_19_tracker_app/view/country_detail_screen/country_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,8 +27,8 @@ class _search_country_screenState extends State<search_country_screen> {
         backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.white : Colors.black,
         automaticallyImplyLeading: false,
         leading: IconButton(
-          onPressed: (){},
-          icon: Icon(Icons.arrow_back , color:  Theme.of(context).brightness == Brightness.light  ? Colors.black : Colors.black,),
+          onPressed: (){Navigator.pop(context);},
+          icon: Icon(Icons.arrow_back , color:  Theme.of(context).brightness == Brightness.light  ? Colors.black : Colors.white,),
         ),
       ),
 
@@ -38,7 +39,7 @@ class _search_country_screenState extends State<search_country_screen> {
         child: Column(
           children: [
 
-            SizedBox(height: 16.h,),
+            SizedBox(height: 4.h,),
 
             //serch button
             Padding(
@@ -85,12 +86,19 @@ class _search_country_screenState extends State<search_country_screen> {
                                   Navigator.push(context,
                                       cust_transactinon(child: country_detail_screen(countryModel: country_detail.country_data_copy.value[index] ,)));
                                 },
-                                leading: Image.network(country_detail.country_data_copy.value[index].countryInfo.flag,
-                                  height: 60.h, width: 60.w,
+                                leading: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white)
+                                  ),
+                                  height: 50.h,
+                                  width: 80.w,
+                                  child: Image.network(country_detail.country_data_copy.value[index].countryInfo.flag, fit: BoxFit.cover,),
                                 ),
                                 title:  Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 12.w),
-                                  child: cario_text(containt: country_detail.country_data_copy.value[index].country),
+                                  child: cario_text(containt: country_detail.country_data_copy.value[index].country ,
+                                   fontcolor: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white,
+                                  ),
                                 ),
                                 subtitle:  Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -148,12 +156,3 @@ class _search_country_screenState extends State<search_country_screen> {
     );
   }
 }
-
-//data
-/* */
-
-
-
-//shimmer
-/*
-           */
