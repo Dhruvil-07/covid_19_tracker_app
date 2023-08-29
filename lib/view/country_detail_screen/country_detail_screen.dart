@@ -48,8 +48,10 @@ class country_detail_screen extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(height: profile_height,),
+                    SizedBox(height: profile_height - 20.h,),
                     reusablerow(context, "Country" ,countryModel.country.toString()),
+                    divider(context),
+                    reusablerow(context, "Continent" ,countryModel.continent.toString()),
                     divider(context),
                     reusablerow(context, "Country Population" ,countryModel.population.toString()),
                     divider(context),
@@ -60,7 +62,9 @@ class country_detail_screen extends StatelessWidget {
                     reusablerow(context, "Total Recovred Cases" ,countryModel.recovered.toString()),
                     divider(context),
                     reusablerow(context, "Total Death" ,countryModel.deaths.toString()),
-                  ],
+                    divider(context),
+                    reusablerow(context, "Effected" ,  "${countryModel.effectedper.toStringAsFixed(2)} %" ),
+                ],
                 ),
               ),
             ),

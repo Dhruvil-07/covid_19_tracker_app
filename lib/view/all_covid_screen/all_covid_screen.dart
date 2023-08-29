@@ -1,14 +1,17 @@
 import 'package:covid_19_tracker_app/instance/getx_controller_instance.dart';
 import 'package:covid_19_tracker_app/models/all_covid_data_model.dart';
+import 'package:covid_19_tracker_app/models/country_data_model.dart';
 import 'package:covid_19_tracker_app/utils/navigation/custom_navigation.dart';
 import 'package:covid_19_tracker_app/utils/text/text.dart';
 import 'package:covid_19_tracker_app/view/all_covid_screen/components/covid_data_card.dart';
 import 'package:covid_19_tracker_app/view/all_covid_screen/components/pie_chart.dart';
 import 'package:covid_19_tracker_app/view/serch_country_screen/search_country.dart';
+import 'package:covid_19_tracker_app/view_model/api_methods/country_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 
 class all_covid_screen extends StatefulWidget {
   const all_covid_screen({Key? key}) : super(key: key);
@@ -19,7 +22,6 @@ class all_covid_screen extends StatefulWidget {
 
 class _all_covid_screenState extends State<all_covid_screen> with TickerProviderStateMixin{
 
-
   late AnimationController animation =
   AnimationController(vsync: this , duration: Duration(seconds: 3))..repeat();
 
@@ -29,6 +31,18 @@ class _all_covid_screenState extends State<all_covid_screen> with TickerProvider
     super.dispose();
   }
 
+  //for high and low efected
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+   country_detail.get_country_data().whenComplete(() {
+     country_detail.country_data_for_sort = [];
+     country_detail.country_data_for_sort = country_detail.country_data;
+      setState(() {});
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +50,7 @@ class _all_covid_screenState extends State<all_covid_screen> with TickerProvider
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Theme.of(context).brightness == Brightness.light ?  Colors.deepPurple.shade100 : Colors.white,
+        backgroundColor: Theme.of(context).brightness == Brightness.light ?  Colors.deepPurple.shade300 : Colors.white,
         centerTitle: true,
         title: algeriya_text(containt: "Covid 19 Tracker"),
         actions: [
@@ -50,19 +64,17 @@ class _all_covid_screenState extends State<all_covid_screen> with TickerProvider
         ],
       ),
 
-
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              
-              FutureBuilder(
+        child: FutureBuilder(
                   future: all_covid_detail.get_world_covid_data(),
                   builder: (context, AsyncSnapshot<AllCovidModel> snapshot){
                     if(snapshot.hasData)
                     {
+                      //add spicific model
                       allCovidModel = snapshot.data;
                       print(allCovidModel);
+
+
                       return SingleChildScrollView(
                         child: Column(
                           children: [
@@ -82,13 +94,6 @@ class _all_covid_screenState extends State<all_covid_screen> with TickerProvider
                             covid_data_card(
                               allCovidModel: allCovidModel!,
                             ),
-
-                            SizedBox(height: 20.h,),
-
-                            algeriya_text(containt: "Top  5  Effected Country" , fontsize: 22.spMin,),
-
-                            SizedBox(height: 20.h,),
-
                           ],
                         ),
                       );
@@ -97,94 +102,14 @@ class _all_covid_screenState extends State<all_covid_screen> with TickerProvider
                     {
                       return SpinKitCircle(
                         color: Colors.yellow,
-                        size: 50.sp,
+                        size: 100.sp,
                         controller: animation,
                       );
                     }
 
                   }
               ),
-
-              SizedBox(height: 8.h,),
-
-              Container(
-                height: 250.h,
-                width: double.infinity,
-                child: FutureBuilder(
-                  future: country_detail.get_asc_sorted_list(),
-                  builder: (context, snapshot){
-                    if(snapshot.hasData)
-                    {
-                      return Obx(
-                            () => ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index){
-                            return Padding(
-                              padding: EdgeInsets.all(
-                                10.spMin,
-                              ),
-                              child: Container(
-                                width: MediaQuery.sizeOf(context).width  - 50.w,
-                                color: Colors.grey,
-                                child: Text("${snapshot.data!.value[index].country}"
-                                    " ${snapshot.data!.value[index].effectedper}"),
-                              ),
-                            );
-                          },),
-                      );
-                    }
-                    else
-                    {
-                      return Center(child: CircularProgressIndicator(),);
-                    }
-
-                  },
-
-                ),
-              ),
-
-              Container(
-                height: 250.h,
-                width: double.infinity,
-                child: FutureBuilder(
-                  future: country_detail.get_desc_sorted_list(),
-                  builder: (context, snapshot){
-                    if(snapshot.hasData)
-                    {
-                      return Obx(
-                            () => ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (context, index){
-                            return Padding(
-                              padding: EdgeInsets.all(
-                                10.spMin,
-                              ),
-                              child: Container(
-                                width: MediaQuery.sizeOf(context).width  - 50.w,
-                                color: Colors.grey,
-                                child: Text("${snapshot.data!.value[index].country}"
-                                    " ${snapshot.data!.value[index].effectedper}"),
-                              ),
-                            );
-                          },),
-                      );
-                    }
-                    else
-                    {
-                      return Center(child: CircularProgressIndicator(),);
-                    }
-
-                  },
-
-                ),
-              )
-            ],
-
-          ),
-        ),
-      )
+      ),
     );
   }
 }

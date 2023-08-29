@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:covid_19_tracker_app/utils/navigation/custom_navigation.dart';
 import 'package:covid_19_tracker_app/utils/text/text.dart';
 import 'package:covid_19_tracker_app/view/all_covid_screen/all_covid_screen.dart';
+import 'package:covid_19_tracker_app/view/enterance_page/enterance_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -25,7 +26,7 @@ class _splase_screenState extends State<splase_screen> with TickerProviderStateM
     // TODO: implement initState
     super.initState();
     Timer(Duration(seconds: 5), () {
-       Navigator.pushReplacement(context, cust_transactinon(child: all_covid_screen()));
+       Navigator.pushReplacement(context, cust_transactinon(child: entrance_page_of_app()));
     });
   }
 
